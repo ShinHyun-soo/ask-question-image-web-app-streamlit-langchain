@@ -1,4 +1,4 @@
-from tempfile import NamedTemporaryFile
+
 
 import streamlit as st
 from langchain.agents import initialize_agent
@@ -7,7 +7,12 @@ from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 
 from tools import ImageCaptionTool, ObjectDetectionTool
 
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
 ##############################
 ### initialize agent #########
 ##############################
@@ -20,7 +25,7 @@ conversational_memory = ConversationBufferWindowMemory(
 )
 
 llm = ChatOpenAI(
-    #openai_api_key='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',
+    openai_api_key=openai_api_key,
     temperature=0,
     model_name="gpt-3.5-turbo"
 )
@@ -54,7 +59,7 @@ if file:
     ##############################
     ### compute agent response ###
     ##############################
-    with NamedTemporaryFile(dir='.') as f:
+    with open("temp.jpg","w+b") as f:
         f.write(file.getbuffer())
         image_path = f.name
 
